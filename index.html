@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mindmap Notulen FGD RJPP 2026-2030 Bank Sulselbar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            overflow-x: auto;
+        }
+
+        .header {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            color: #e0e0e0;
+            font-size: 1.2rem;
+        }
+
+        .mindmap-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+        }
+
+        .main-node {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 20px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0 auto 40px;
+            max-width: 500px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .main-node:hover {
+            transform: translateY(-5px);
+        }
+
+        .level-container {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 40px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .level-1 {
+            background: linear-gradient(45deg, #2196F3, #1976D2);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            flex: 1;
+            min-width: 300px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .level-1:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .level-1 h3 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            text-align: center;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+            padding-bottom: 10px;
+        }
+
+        .level-2 {
+            background: rgba(255, 255, 255, 0.95);
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #4CAF50;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .level-2:hover {
+            background: white;
+            transform: translateX(5px);
+        }
+
+        .level-2 h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .level-3 {
+            background: rgba(76, 175, 80, 0.1);
+            margin: 8px 0;
+            padding: 10px;
+            border-radius: 8px;
+            border-left: 3px solid #4CAF50;
+        }
+
+        .level-3 ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .level-3 li {
+            padding: 5px 0;
+            position: relative;
+            padding-left: 20px;
+            color: #34495e;
+        }
+
+        .level-3 li:before {
+            content: "▶";
+            position: absolute;
+            left: 0;
+            color: #4CAF50;
+            font-size: 0.8rem;
+        }
+
+        .stats-box {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            display: inline-block;
+            margin: 5px;
+            font-weight: bold;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+
+        .highlight {
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            display: inline-block;
+            margin: 3px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .connection-line {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, #4CAF50, #2196F3);
+            opacity: 0.6;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: rgba(255,255,255,0.8);
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .level-container {
+                flex-direction: column;
+            }
+            
+            .level-1 {
+                min-width: auto;
+            }
+            
+            .mindmap-container {
+                padding: 10px;
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .fade-in {
+            animation: fadeIn 1s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="header fade-in">
+        <h1>📋 MINDMAP NOTULEN FGD</h1>
+        <p>Rencana Jangka Panjang Perusahaan (RJPP) 2026-2030<br><strong>Bank Sulawesi Selatan dan Sulawesi Barat</strong></p>
+    </div>
+
+    <div class="mindmap-container">
+        <div class="main-node pulse">
+            🏦 NOTULEN FGD RJPP 2026-2030<br>BANK SULSELBAR
+        </div>
+
+        <div class="level-container fade-in">
+            <div class="level-1">
+                <h3>🎯 PEMBUKAAN</h3>
+                <div class="level-2">
+                    <h4>Header Notulen</h4>
+                    <div class="level-3">
+                        <ul>
+                            <li>Tanggal, Waktu, Tempat</li>
+                            <li>Daftar Peserta FGD</li>
+                            <li>Agenda Pembahasan</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="level-2">
+                    <h4>Konteks & Tujuan</h4>
+                    <div class="level-3">
+                        <ul>
+                            <li>RJPP sebagai Tahap 2 Roadmap 2021-2040</li>
+                            <li>Tema: "Kepemimpinan Pasar di Wilayah Sulselbar"</li>
+                            <li>Validasi dan Input Stakeholder</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="level-1">
+                <h3>📊 PEMAPARAN TIM MARKPLUS</h3>
+                <div class="level-2">
+                    <h4>1. Evaluasi Capaian Sebelumnya</h4>
+                    <div class="level-3">
+                        <div class="stats-box">Roadmap 2021-2040 Tahap 1: 64% ✓</div>
+                        <div class="stats-box">Corporate Plan 2021-2025: 80% ✓</div>
+                        <div class="stats-box">Digital Initiative 2023-2025: 56% ✓</div>
+                    </div>
+                </div>
+                
+                <div class="level-2">
+                    <h4>2. Analisis Lingkungan Eksternal</h4>
+                    <div class="level-3">
+                        <div class="highlight">5 Tren Teknologi Perbankan</div>
+                        <ul>
+                            <li>Open Banking</li>
+                            <li>Predictive Marketing</li>
+                            <li>Generative AI</li>
+                            <li>Payment Processing</li>
+                            <li>Hybrid Branch</li>
+                        </ul>
+                        <div class="highlight">SWOT Analysis</div>
+                        <ul>
+                            <li>Politik-Legal, Ekonomi</li>
+                            <li>Sosial-Budaya (Gen Z Dominasi)</li>
+                            <li>Kekuatan & Kelemahan Internal</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="level-2">
+                    <h4>3. Aspirasi Stakeholder & Visi-Misi</h4>
+                    <div class="level-3">
+                        <div class="highlight">8 Aspirasi Kunci</div>
+                        <ul>
+                            <li>Priority Leading Sectors</li>
+                            <li>Contribute to MSMEs</li>
+                            <li>Productive Disbursement</li>
+                            <li>Strengthen Liquidity</li>
+                            <li>Syariah First</li>
+                            <li>Digital Enhancement</li>
+                            <li>Culture Transformation</li>
+                            <li>Local Resourcing</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="level-1">
+                <h3>🚀 DISKUSI & PENUTUP</h3>
+                <div class="level-2">
+                    <h4>6 Aspek Diskusi Kunci</h4>
+                    <div class="level-3">
+                        <div class="highlight">Strategi Integrasi Produk Syariah</div>
+                        <div class="highlight">Pengembangan Pasar Generasi Muda</div>
+                        <div class="highlight">Kematangan Digital & Inovasi</div>
+                        <div class="highlight">Model Strategis & Organisasi</div>
+                        <div class="highlight">Mitigasi Risiko & Tantangan</div>
+                        <div class="highlight">Kolaborasi Stakeholder</div>
+                    </div>
+                </div>
+                
+                <div class="level-2">
+                    <h4>Hasil & Rencana Tindak Lanjut</h4>
+                    <div class="level-3">
+                        <ul>
+                            <li>Penyempurnaan inisiatif strategis</li>
+                            <li>Framework kematangan digital</li>
+                            <li>KPI mingguan/bulanan</li>
+                            <li>Alignment dengan regulator OJK</li>
+                            <li>Studi pasar diferensiasi</li>
+                            <li>Collection plan terintegrasi</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="level-container fade-in">
+            <div class="level-1">
+                <h3>🎯 4. SASARAN & INISIATIF STRATEGIS</h3>
+                <div class="level-2">
+                    <h4>7 Sasaran Strategis</h4>
+                    <div class="level-3">
+                        <div class="highlight">Customer-Oriented (3)</div>
+                        <ul>
+                            <li>Institution Collaborator</li>
+                            <li>SMEs Enabler</li>
+                            <li>Consumer Banking Leader</li>
+                        </ul>
+                        <div class="highlight">Key Capabilities (4)</div>
+                        <ul>
+                            <li>Shariah-Integrated</li>
+                            <li>Digitally Mature</li>
+                            <li>Talent-Driven</li>
+                            <li>Well-Governed</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="level-2">
+                    <h4>24 Inisiatif Strategis</h4>
+                    <div class="level-3">
+                        <div class="stats-box">Timeline Implementasi Jelas</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="level-1">
+                <h3>📈 5. KPI & TARGET PENCAPAIAN</h3>
+                <div class="level-2">
+                    <h4>Balanced Scorecard (4 Perspektif)</h4>
+                    <div class="level-3">
+                        <div class="highlight">Financial</div>
+                        <ul>
+                            <li>ROA, Net Interest Margin</li>
+                            <li>NPL, BOPO</li>
+                        </ul>
+                        <div class="highlight">Customer</div>
+                        <ul>
+                            <li>Digital Positioning</li>
+                            <li>Customer Satisfaction</li>
+                            <li>Brand Equity, Market Share</li>
+                        </ul>
+                        <div class="highlight">Internal Process</div>
+                        <ul>
+                            <li>Digital Maturity, SLA</li>
+                            <li>GRC Rating, P3DN</li>
+                        </ul>
+                        <div class="highlight">Learning & Growth</div>
+                        <ul>
+                            <li>Sertifikasi Pegawai</li>
+                            <li>Digital Culture</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="level-2">
+                    <h4>Target 2 Horizon</h4>
+                    <div class="level-3">
+                        <div class="stats-box">H1 (2026-2027): ROA 3.5%, MS 20%</div>
+                        <div class="stats-box">H2 (2028-2030): ROA 4%, MS 30%</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="level-1">
+                <h3>⚙️ 6. CHANGE MANAGEMENT & RISIKO</h3>
+                <div class="level-2">
+                    <h4>Change Management Team (CMT)</h4>
+                    <div class="level-3">
+                        <div class="highlight">RASCI Matrix</div>
+                        <ul>
+                            <li>R: Responsible</li>
+                            <li>A: Accountable</li>
+                            <li>S: Supportive</li>
+                            <li>C: Consulted</li>
+                            <li>I: Informed</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="level-2">
+                    <h4>Risk Management</h4>
+                    <div class="level-3">
+                        <div class="stats-box">47 Risiko Strategis</div>
+                        <ul>
+                            <li>Level: Extreme, High, Moderate</li>
+                            <li>Strategi Mitigasi Komprehensif</li>
+                            <li>Timeline Implementasi 2026-2030</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>🏦 Menuju Kepemimpinan Pasar di Wilayah Sulselbar 2026-2030 🏦</p>
+        <p>"Menjadi Bank Kebanggaan dan Terkemuka untuk Membangun Kawasan Timur Indonesia"</p>
+    </div>
+
+    <script>
+        // Add interactive hover effects
+        document.querySelectorAll('.level-1, .level-2').forEach(element => {
+            element.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.02)';
+                this.style.transition = 'transform 0.3s ease';
+            });
+            
+            element.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1)';
+            });
+        });
+
+        // Add click to expand functionality for mobile
+        document.querySelectorAll('.level-2 h4').forEach(header => {
+            header.addEventListener('click', function() {
+                const content = this.nextElementSibling;
+                if (content.style.display === 'none') {
+                    content.style.display = 'block';
+                    this.style.backgroundColor = 'rgba(76, 175, 80, 0.2)';
+                } else {
+                    content.style.display = 'none';
+                    this.style.backgroundColor = 'transparent';
+                }
+            });
+        });
+
+        // Animate elements on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.level-1').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'all 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
